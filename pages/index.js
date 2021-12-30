@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import Header from '../components/staticHeader'
+import Header from '../components/header'
 
 export default function Home() {
   return (
@@ -7,7 +7,7 @@ export default function Home() {
       <Header></Header>
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <Head>
-          <title>Create Next App</title>
+          <title>Vrexy, The discord bot</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
       

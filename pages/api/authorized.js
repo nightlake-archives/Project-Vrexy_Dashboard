@@ -1,7 +1,10 @@
 require('dotenv').config();
-import { serialize } from 'cookie';
+import 'cookies-next';
+import { setCookies } from 'cookies-next';
 
 export default async function authorized(req, res) {
+    // https://discord.com/api/oauth2/token
+    
     const data = new URLSearchParams({
         client_id: process.env.CID,
         client_secret: process.env.CSECRET,
@@ -19,16 +22,13 @@ export default async function authorized(req, res) {
         }
     })
 
-    const dRes = await userToken.json()
+    const discordResponse = await userToken.json()
 
-    if (dRes.error) return res.status(400).send('There was an issue authenticating. Please try again.')
+    if (discordResponse.error) return res.status(400).send('There was an issue authenticating. Please try again.')
+    // res.setHeader('Set-Cookie', serialize(['token', 'refresh'], [dRes.access_token, dRes.refresh_token], {path: '/', maxAge: dRes.expires_in * 1000, sameSite: true}));
 
-    function setCookie(name, value) {
-        res.setHeader('Set-Cookie', serialize(name, value, { path: '/Auth', maxAge: dRes.expires_in * 1000 }));
-    }
-
-    setCookie('token', dRes.access_token)
-    setCookie('refresh', dRes.refresh_token)
-
+    setCookies('token', discordResponse.access_token, {req, res, maxAge: discordResponse.expires_in * 1000})
+    setCookies('refresh', discordResponse.refresh_token, {req, res, maxAge: discordResponse.expires_in * 1000})
+    
     res.redirect('/dashboard')
 }   

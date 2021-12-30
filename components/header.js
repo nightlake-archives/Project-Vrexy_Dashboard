@@ -1,23 +1,46 @@
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from 'react'
 import { Popover, Transition } from '@headlessui/react'
-import {DocumentSearchIcon, MenuIcon,XIcon,} from '@heroicons/react/outline'
+import { DocumentSearchIcon, MenuIcon, XIcon, } from '@heroicons/react/outline'
 import DesktopPopover from './desktopPopover'
+import MobilePopover from './mobilePopoverPanel'
 
 const docs = []
 const resources = []
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+import { checkCookies } from 'cookies-next'
+
+
+export function LoginButton(loginState, displayState) {
+  let displayClass;
+
+  if (displayState.toString() === 'Mobile') { displayClass = 'w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700' }
+  else { displayClass = 'ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700'; }
+
+  if (loginState === true) {
+    return (<><a
+      href="/dashboard"
+      className={displayClass}
+    >
+      Open Dashboard
+    </a></>)
+  } else {
+    return (<><a
+      href={"https://discord.com/oauth2/authorize?client_id=" + process.env.CID + "&redirect_uri=" + process.env.REDIRECT + "&response_type=code&scope=guilds%20identify"}
+      className={displayClass}
+    >
+      Login With Discord
+    </a></>)
+  }
 }
 
-export default function Header() {
+function Header({ ifToken }) {
   return (
     <Popover className="relative bg-white dark:bg-gray">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex justify-between items-center border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
           <div className="flex justify-start lg:w-0 lg:flex-1">
-            <a href="#">
+            <a href="">
               <span className="sr-only">Workflow</span>
               <img
                 className="h-8 w-auto sm:h-10"
@@ -33,30 +56,24 @@ export default function Header() {
             </Popover.Button>
           </div>
           <Popover.Group as="nav" className="hidden md:flex space-x-10">
-            <DesktopPopover arr={docs} display="Docs"></DesktopPopover>
-
             <a href="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
               About
             </a>
 
             <a href="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
-              Privacy
+              top.gg
             </a>
 
             <a href="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
-              top.gg
+              Docs
             </a>
+
           </Popover.Group>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
             <a href="#" className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900">
-              Sign in
+              Invite The Bot
             </a>
-            <a
-              href="#"
-              className="ml-8 whitespace-nowrap inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
-            >
-              Sign up
-            </a>
+            <LoginButton loginState={ifToken} />
           </div>
         </div>
       </div>
@@ -90,44 +107,31 @@ export default function Header() {
               </div>
               <div className="mt-6">
                 <nav className="grid gap-y-8">
-                  {docs.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50"
-                    >
-                      <item.icon className="flex-shrink-0 h-6 w-6 text-indigo-600" aria-hidden="true" />
-                      <span className="ml-3 text-base font-medium text-gray-900">{item.name}</span>
-                    </a>
-                  ))}
+                  <a href="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
+                    About
+                  </a>
+
+                  <a href="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
+                    top.gg
+                  </a>
+
+                  <a href="#" className="text-base font-medium text-gray-500 hover:text-gray-900">
+                    Docs
+                  </a>
                 </nav>
               </div>
             </div>
+
+
             <div className="py-6 px-5 space-y-6">
-              <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-                {resources.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="text-base font-medium text-gray-900 hover:text-gray-700"
-                  >
-                    {item.name}
-                  </a>
-                ))}
-              </div>
               <div>
+                <LoginButton loginState={ifToken} displayState={"Mobile"} />
                 <a
                   href="#"
-                  className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700"
+                  className="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium hover:bg-zinc-200 mt-1"
                 >
-                  Sign up
+                  Invite the bot
                 </a>
-                <p className="mt-6 text-center text-base font-medium text-gray-500">
-                  Existing customer?{' '}
-                  <a href="#" className="text-indigo-600 hover:text-indigo-500">
-                    Sign in
-                  </a>
-                </p>
               </div>
             </div>
           </div>
@@ -136,3 +140,15 @@ export default function Header() {
     </Popover>
   )
 }
+
+export function getStaticProps() {
+  const ifToken = checkCookies('token')
+  console.log(ifToken)
+  return {
+    props: {
+      ifToken
+    }
+  }
+}
+
+export default Header
