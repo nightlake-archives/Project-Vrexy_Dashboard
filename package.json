@@ -51,12 +51,13 @@
     "statuses": "^1.5.0",
     "toidentifier": "^1.0.1",
     "type-is": "^1.6.18",
+    "undici": "^4.12.1",
     "unpipe": "^1.0.0",
     "utils-merge": "^1.0.1",
     "vary": "^1.1.2"
   },
   "scripts": {
-    "run": "tsc && node .",
+    "start": "tsc && node .",
     "lint": "eslint . --ext .ts"
   },
   "repository": {
