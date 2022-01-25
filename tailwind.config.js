@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').TailwindConfig} */
 const tailwindConfig = {
 	content: [
-		'./pages/**/*.{html,js}',
-		'./components/**/*.{html,js}',	
+		'./pages/**/*.{html,js,tsx}',
+		'./components/**/*.{html,js,tsx}',
 	],
 	theme: {
 		extend: {},
